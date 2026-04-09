@@ -84,13 +84,13 @@ func buildFruitTop(topSize int, fruitItemMap *map[string]fruititem.FruitItem) []
 func handleMessage(topSize int, fruitItemMap *map[string]fruititem.FruitItem, outputQueue middleware.Middleware, msg middleware.Message, ack func(), nack func()) {
 	defer ack()
 
-	fruitRecords, err := inner.DeserializeMessage(&msg)
+	fruitRecords, isEof, err := inner.DeserializeMessage(&msg)
 	if err != nil {
 		log.Println("While deserializing message", err)
 		return
 	}
 
-	if len(fruitRecords) > 0 {
+	if !isEof {
 		for _, fruitRecord := range fruitRecords {
 			_, ok := (*fruitItemMap)[fruitRecord.Fruit]
 			if ok {

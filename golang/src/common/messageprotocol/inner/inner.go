@@ -39,32 +39,32 @@ func SerializeMessage(fruitRecords []fruititem.FruitItem) (*middleware.Message, 
 	return &message, nil
 }
 
-func DeserializeMessage(message *middleware.Message) ([]fruititem.FruitItem, error) {
+func DeserializeMessage(message *middleware.Message) ([]fruititem.FruitItem, bool, error) {
 	data, err := deserializeJson([]byte((*message).Body))
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	fruitRecords := []fruititem.FruitItem{}
 	for _, datum := range data {
 		fruitPair, ok := datum.([]interface{})
 		if !ok {
-			return nil, errors.New("Datum is not an array")
+			return nil, false, errors.New("Datum is not an array")
 		}
 
 		fruit, ok := fruitPair[0].(string)
 		if !ok {
-			return nil, errors.New("Datum is not a (fruit, amount) pair")
+			return nil, false, errors.New("Datum is not a (fruit, amount) pair")
 		}
 
 		fruitAmount, ok := fruitPair[1].(float64)
 		if !ok {
-			return nil, errors.New("Datum is not a (fruit, amount) pair")
+			return nil, false, errors.New("Datum is not a (fruit, amount) pair")
 		}
 
 		fruitRecord := fruititem.FruitItem{Fruit: fruit, Amount: uint32(fruitAmount)}
 		fruitRecords = append(fruitRecords, fruitRecord)
 	}
 
-	return fruitRecords, nil
+	return fruitRecords, len(fruitRecords) == 0, nil
 }

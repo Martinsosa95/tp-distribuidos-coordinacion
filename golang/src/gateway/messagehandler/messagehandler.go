@@ -24,7 +24,7 @@ func (messageHandler *MessageHandler) SerializeEofMessage() (*middleware.Message
 }
 
 func (messageHandler *MessageHandler) DeserializeResultMessage(message *middleware.Message) ([]fruititem.FruitItem, error) {
-	fruitRecords, err := inner.DeserializeMessage(message)
+	fruitRecords, _, err := inner.DeserializeMessage(message)
 	if err != nil {
 		return nil, err
 	}
