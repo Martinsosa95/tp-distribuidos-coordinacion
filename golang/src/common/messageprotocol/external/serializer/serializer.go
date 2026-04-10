@@ -31,17 +31,3 @@ func SerializeUint32(value uint32) []byte {
 func DeserializeUint32(bytes []byte) uint32 {
 	return binary.BigEndian.Uint32(bytes)
 }
-
-func SerializeBool(value bool) []byte {
-	data := make([]byte, BOOL_SIZE)
-	if value {
-		data[0] = 1
-	} else {
-		data[0] = 0
-	}
-	return data
-}
-
-func DeserializeBool(bytes []byte) (bool, error) {
-	return (bytes[0] != 0), nil
-}
